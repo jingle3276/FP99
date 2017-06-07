@@ -75,6 +75,7 @@ let flattern (data: Node<'a> list): 'a list =
             | Many l -> aux (aux arr l) tail
     aux [] data |> List.rev
 
+//Avoid nested match
 let flattern2 (data: Node<'a> list): 'a list =
     let rec aux arr (data: Node<'a> list): 'a list =
         match data with 
@@ -84,3 +85,18 @@ let flattern2 (data: Node<'a> list): 'a list =
     aux [] data |> List.rev
 
 
+// Eliminate consecutive duplicates of list elements. (medium)
+// # compress ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"];;
+// - : string list = ["a"; "b"; "c"; "a"; "d"; "e"]
+let compress (data: 'a list): 'a list =
+    let rec aux arr (data: 'a list): 'a list =
+        match data with
+        | [] -> arr
+        | head::tail ->
+            if List.isEmpty arr then
+                aux (head::arr) tail
+            elif arr.[0] = head then
+                aux arr tail
+            else
+                aux (head::arr) tail
+    aux [] data |> List.rev      
