@@ -1,3 +1,7 @@
+// rahul.ratnagiri [5:41 PM] 
+// suggest you start with this: https://ocaml.org/learn/tutorials/99problems.html 
+// (you can google for f# answers to verify)
+
 // https://ocaml.org/learn/tutorials/99problems.html
 
 // Working with lists
@@ -29,7 +33,15 @@ let rec findKth (list: 'a list) (k: int): 'a option =
     | _, _::tail -> findKth tail (k-1)
     | _ -> None 
 
-
+// So I know that `::` will prepend an item to a list, e.g. `'a' :: ['b'; 'c']`; 
+// is there a symbol in F# that append the item to a list ?
+// e.g. `['b'; 'c'] ??? 'e'` 
+// rahul.ratnagiri [May 10]
+// @ying reverse and prepend if you want to do it tail-recursively
+// ruben [May 10] 
+// a common technique is to accumulate with prepends and then do a `List.rev` at the end, 
+// which under the covers is _relatively_ efficient and you’re only doing a single junk generation
+// step per list vs doing it per item if you append
 let rec reverse' acc aList =
     match aList with
     | [] -> acc
@@ -100,3 +112,33 @@ let compress (data: 'a list): 'a list =
             else
                 aux (head::arr) tail
     aux [] data |> List.rev      
+
+let rec compress2 (data: 'a list): 'a list =
+    match data with
+    | a::(b::_ as t) -> 
+        if a = b then compress2 t
+        else a::(compress2 t)
+    | l -> l 
+
+
+// Run-length encoding of a list. (easy)
+// If you need so, refresh your memory about run-length encoding.
+// Here is an example:
+// # encode ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"];;
+// - : (int * string) list =
+// [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]
+let encode (data: string list): (int * string) list = 
+    let rec aux (acc:int) (data: string list) : (int * string) list =
+        match data with 
+        | a::(b::_ as t) -> 
+            if a = b then 
+                aux (acc+1) t
+            else
+                (acc+1, a)::(aux 0 t)
+        | [a] -> [(1, a)] 
+        | [] -> [] 
+    aux 0 data
+
+
+
+
