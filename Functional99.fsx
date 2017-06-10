@@ -33,6 +33,7 @@ let rec findKth (list: 'a list) (k: int): 'a option =
     | _, _::tail -> findKth tail (k-1)
     | _ -> None 
 
+
 // So I know that `::` will prepend an item to a list, e.g. `'a' :: ['b'; 'c']`; 
 // is there a symbol in F# that append the item to a list ?
 // e.g. `['b'; 'c'] ??? 'e'` 
@@ -46,6 +47,19 @@ let rec reverse' acc aList =
     match aList with
     | [] -> acc
     | head :: tail -> reverse' (head::acc) tail 
+
+//Reverse a list. (easy)
+let reverse aList = 
+    let rec aux acc aList =
+        match aList with
+        | [] -> acc
+        | head :: tail -> aux (head::acc) tail 
+    aux [] aList
+
+// Find out whether a list is a palindrome. (easy)
+// HINT: a palindrome is its own reverse.
+let rec isPalindrome aList = 
+    reverse aList = aList
 
 
 // Find the number of elements of a list. (easy)
