@@ -154,5 +154,13 @@ let encode (data: string list): (int * string) list =
     aux 0 data
 
 
-
+// Duplicate the elements of a list. (easy)
+// duplicate ["a";"b";"c";"c";"d"];;
+// - : string list = ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+let duplicate (data: 'a list): 'a list =
+    let rec aux arr data = 
+        match data with 
+        | [] -> arr
+        | head::tail -> aux (head::head::arr) tail
+    aux [] data |> List.rev
 
