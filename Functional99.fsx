@@ -164,3 +164,60 @@ let duplicate (data: 'a list): 'a list =
         | head::tail -> aux (head::head::arr) tail
     aux [] data |> List.rev
 
+let rec duplicate1 (data: 'a list): 'a list =
+    match data with 
+    | [] -> []
+    | head::tail -> head::head::duplicate1 tail
+
+
+// Replicate the elements of a list a given number of times. (medium) 
+// # replicate ["a";"b";"c"] 3;;
+// - : string list = ["a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c"]
+let replicate (data: 'a list) (n:int): 'a list =
+    let genN (item:'a) (n:int) =
+        [for i in 1..n -> item]
+    let rec aux (data: 'a list) arr: ('a list) =
+        match data with
+        | [] -> arr
+        | head::tail ->
+            aux tail ((genN head n) @ arr)  //Not ideal
+    aux data [] |> List.rev
+
+/// this one perform slightly better since it uses prepend
+let replicate1 (data: 'a list) (n: int): 'a list =
+    let rec prependN (item: 'a) (n:int) (arr: 'a list) : 'a list =
+        if n = 0 then
+            arr
+        else
+            prependN item (n-1) (item::arr)
+    let rec aux (data: 'a list) arr: 'a list = 
+        match data with
+        | [] -> arr
+        | head::tail ->
+            aux tail (prependN head n arr)
+    aux data [] |> List.rev
+
+
+// Drop every N'th element from a list. (medium)
+// # drop ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3;;
+// - : string list = ["a"; "b"; "d"; "e"; "g"; "h"; "j"]
+let drop (data: 'a list) (n:int): 'a list =
+    let rec aux (data: 'a list) (count:int): 'a list =
+        match data with
+        | [] -> []
+        | head::tail ->
+            if count = n then
+                aux tail 1
+            else
+                head::(aux tail (count + 1))
+    aux data 1
+
+
+// Split a list into two parts; the length of the first part is given. (easy)
+// If the length of the first part is longer than the entire list, then the first part is the list and the second part is empty.
+
+// split ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3;;
+// - : string list * string list =
+// (["a"; "b"; "c"], ["d"; "e"; "f"; "g"; "h"; "i"; "j"])
+// split ["a";"b";"c";"d"] 5;;
+// string list * string list = (["a"; "b"; "c"; "d"], [])
