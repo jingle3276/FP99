@@ -214,10 +214,22 @@ let drop (data: 'a list) (n:int): 'a list =
 
 
 // Split a list into two parts; the length of the first part is given. (easy)
-// If the length of the first part is longer than the entire list, then the first part is the list and the second part is empty.
+// If the length of the first part is longer than the entire list, then the first part is the list and 
+// the second part is empty.
 
 // split ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3;;
 // - : string list * string list =
 // (["a"; "b"; "c"], ["d"; "e"; "f"; "g"; "h"; "i"; "j"])
 // split ["a";"b";"c";"d"] 5;;
 // string list * string list = (["a"; "b"; "c"; "d"], [])
+
+let split (data: 'a list) (n:int): ('a list * 'a list) =
+    let rec aux (data: 'a list) (count:int) (acc: 'a list) = 
+        match data with 
+        | [] -> (acc|>List.rev, [])
+        | head::tail -> 
+            if count = 0 then
+                (acc|>List.rev, tail)
+            else
+                aux tail (count-1) (head::acc)
+    aux data n []
