@@ -233,3 +233,15 @@ let split (data: 'a list) (n:int): ('a list * 'a list) =
             else
                 aux tail (count-1) (head::acc)
     aux data n []
+
+
+// Rotate a list N places to the left. (medium)
+// # rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] 3;;
+// - : string list = ["d"; "e"; "f"; "g"; "h"; "a"; "b"; "c"]
+// # rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] (-2);;
+// - : string list = ["g"; "h"; "a"; "b"; "c"; "d"; "e"; "f"]
+let rotate (data: 'a list) (n:int) =
+    //todo use split to solve it ? 
+
+
+
