@@ -226,10 +226,10 @@ let drop (data: 'a list) (n:int): 'a list =
 let split (data: 'a list) (n:int): ('a list * 'a list) =
     let rec aux (data: 'a list) (count:int) (acc: 'a list) = 
         match data with 
-        | [] -> (acc|>List.rev, [])
+        | [] -> (acc |> List.rev, [])
         | head::tail -> 
-            if count = 0 then
-                (acc|>List.rev, tail)
+            if count = 1 then
+                ((head::acc)|>List.rev, tail)
             else
                 aux tail (count-1) (head::acc)
     aux data n []
@@ -238,10 +238,14 @@ let split (data: 'a list) (n:int): ('a list * 'a list) =
 // Rotate a list N places to the left. (medium)
 // # rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] 3;;
 // - : string list = ["d"; "e"; "f"; "g"; "h"; "a"; "b"; "c"]
-// # rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] (-2);;
+// # rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] (-2);;  [h, g] [f, e, d, c, b, a] -> [g, h] @ [a, b, c, d, e, f]
 // - : string list = ["g"; "h"; "a"; "b"; "c"; "d"; "e"; "f"]
-let rotate (data: 'a list) (n:int) =
-    //todo use split to solve it ? 
-
-
+let rotate (data: 'a list) (n:int): 'a list =
+    //todo use split to solve it ?
+    if n > 0 then
+        let a, b = split data n
+        b @ a
+    else
+        let a, b = split (List.rev data) (-n)
+        (a |> List.rev) @ (b |> List.rev)
 
