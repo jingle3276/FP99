@@ -249,3 +249,17 @@ let rotate (data: 'a list) (n:int): 'a list =
         let a, b = split (List.rev data) (-n)
         (a |> List.rev) @ (b |> List.rev)
 
+
+//# remove_at 1 ["a";"b";"c";"d"];;
+//- : string list = ["a"; "c"; "d"]
+let remove_at (n: int) (data: 'a list): 'a list =
+    let rec aux (count: int) (data: 'a list)  = 
+        match data with 
+        | [] -> []
+        | head::tail ->
+            if count = n then
+                tail
+            else
+                head::aux (count+1) tail 
+    aux 0 data 
+
