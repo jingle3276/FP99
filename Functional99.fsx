@@ -212,6 +212,26 @@ let drop (data: 'a list) (n:int): 'a list =
                 head::(aux tail (count + 1))
     aux data 1
 
+// Extract a slice from a list. (medium)
+// Given two indices, i and k, the slice is the list containing the elements between the i'th and k'th element
+// of the original list (both limits included). Start counting the elements with 0 (this is the way the List module
+// numbers elements).
+
+// # slice ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 2 6;;
+// - : string list = ["c"; "d"; "e"; "f"; "g"]
+let slice (data: 'a list) (i: int) (j: int): 'a list =
+    let rec aux (data: 'a list) (acc:'a list) (m:int): ('a list) =
+        match data with
+        |[] -> acc
+        |head::tail ->
+            if m < i then
+                aux tail acc (m+1)
+            elif m >= i && m <= j then  //left boundary
+                aux tail (head::acc) (m+1)
+            else
+                acc
+    aux data [] 0 |> List.rev
+
 
 // Split a list into two parts; the length of the first part is given. (easy)
 // If the length of the first part is longer than the entire list, then the first part is the list and 
