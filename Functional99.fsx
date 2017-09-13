@@ -14,7 +14,7 @@ let rec last (list: 'a list): 'a option =
     | _ :: tail_list -> last tail_list
 // Note:  None in F# has to have a type !
 
-let addOne (x: int) = 
+let addOne (x: int) =
    x + 1
 let newFunc = last >> Option.map addOne  
 
@@ -71,6 +71,13 @@ let length aList =
         | _::tail -> aux (acc + 1 ) tail
     aux 0 aList
 
+
+let length1 aList =
+    let rec aux acc aList =
+        match aList with
+        | [] -> acc
+        | _::tail -> aux (acc + 1) tail
+    aux 0 aList
 
 
 // Flatten a nested list structure. (medium)
@@ -282,4 +289,17 @@ let remove_at (n: int) (data: 'a list): 'a list =
             else
                 head::aux (count+1) tail 
     aux 0 data 
+
+
+
+
+// binary trees
+
+type 'a BinaryTree =
+    | Empty
+    | Node of 'a * 'a BinaryTree * 'a BinaryTree
+
+let char_tree = Node ('a', Empty, Node('b', Empty, Empty ))
+
+let int_tree = Node (9, Node(4, Empty, Node(5, Empty, Empty)), Node(11, Empty, Empty))
 
