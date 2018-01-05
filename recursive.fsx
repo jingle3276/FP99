@@ -42,3 +42,19 @@ let getFuncContainsAnyChar (ls: string list): (char -> bool) =
             let orFuncs inputChar = (headFunc inputChar) || (acc inputChar)
             aux orFuncs tail
     aux (function _ -> false) ls    // must be false initially 
+
+
+let myMap =
+    [("1", "a"); ("2", "b")]
+    |> Map.ofList
+
+let r = Map.tryFind "2" myMap
+let o = defaultArg r "c"
+
+
+
+
+
+
+
+let d = decimal 0.0
