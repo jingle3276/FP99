@@ -4,6 +4,9 @@
 // intput : [1; 2; 3; 5; 7; 8; 10] 
 // output:  1-3, 5, 7-8, 10
 
+/// idea: the point of termines the block is at: when the current item is not part of the (first,last) range
+/// use range: (int*int) list as storage passed along
+/// first, last are the previous range block
 let findContigiousRange(numbers: int list): string list =
     let rec find(numbers: int list)(first: int)(last: int)(range: (int*int) list) =
         match numbers with
