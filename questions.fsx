@@ -1,3 +1,47 @@
+open System
+// Jose's interview question
+// implemt a fold function 
+
+
+// Hugh Richardson's interview at Jet. I shadowed it 
+// given input: ["cat", "dog", "act"]
+// output the groups of anagrams: [["cat", "act"], ["dog"]
+
+// given input: ["cat", "dog", "act"]
+// output the groups of anagrams: [["cat", "act"], ["dog"]
+let groupByAnagram(words: string list): string list list =
+    let sortStr (word:string): string =
+        word
+        |> Seq.sort
+        |> String.Concat
+
+    words
+    |> List.map (fun word -> (word|>sortStr, word))
+    |> List.fold (fun (s: Map<string, Set<string>>) (sortedWord, word) ->
+            let wordsOpt = s.TryFind sortedWord
+            match wordsOpt with
+            | Some words when words.Count > 0 ->
+                s.Add (sortedWord, (words.Add word))
+            | _ ->
+                let emptySet = Set.empty
+                s.Add (sortedWord, emptySet.Add word)
+        ) Map.empty
+    |> Seq.map (fun kvp ->
+            kvp.Value |> Seq.toList
+        )
+    |> Seq.toList
+
+let groupByAnagram1(words: string list): string list list =
+    let sortStr (word:string): string =
+        word
+        |> Seq.sort
+        |> String.Concat
+    words
+    |> List.map (fun word -> (word|>sortStr, word))
+    |> List.groupBy (fun (k, _) -> k)
+    |> List.map snd 
+    |> List.map (List.map snd)
+
 
 // Jose's interview question 2018-1-5
 // find increasing contigious ranges in an int array.
@@ -19,7 +63,7 @@ let findContigiousRange(numbers: int list): string list =
             (first,last)::range
 
     let first = numbers |> List.head
-    find (numbers |> List.skip 1) first first []
+    find (numbers |> List.tail) first first []
     |> List.rev
     |> List.map (fun c ->
                     let a, b = c
@@ -27,6 +71,5 @@ let findContigiousRange(numbers: int list): string list =
                         sprintf "%d" a
                     else 
                         sprintf "%d-%d" a b) 
-
 
 
