@@ -10,13 +10,8 @@ open System
 // given input: ["cat", "dog", "act"]
 // output the groups of anagrams: [["cat", "act"], ["dog"]
 let groupByAnagram(words: string list): string list list =
-    let sortStr (word:string): string =
-        word
-        |> Seq.sort
-        |> String.Concat
-
     words
-    |> List.map (fun word -> (word|>sortStr, word))
+    |> List.map (fun x -> (x|>Seq.sort|>String.Concat, x))
     |> List.fold (fun (s: Map<string, Set<string>>) (sortedWord, word) ->
             let wordsOpt = s.TryFind sortedWord
             match wordsOpt with
@@ -31,6 +26,7 @@ let groupByAnagram(words: string list): string list list =
         )
     |> Seq.toList
 
+
 let groupByAnagram1(words: string list): string list list =
     let sortStr (word:string): string =
         word
@@ -39,8 +35,7 @@ let groupByAnagram1(words: string list): string list list =
     words
     |> List.map (fun word -> (word|>sortStr, word))
     |> List.groupBy (fun (k, _) -> k)
-    |> List.map snd 
-    |> List.map (List.map snd)
+    |> List.map (snd >> (List.map snd))
 
 
 // Jose's interview question 2018-1-5
@@ -73,3 +68,21 @@ let findContigiousRange(numbers: int list): string list =
                         sprintf "%d-%d" a b) 
 
 
+
+(*
+A code question RiverBed asked during the Oct-8-2010 Job Fair at Stony Brook. 
+* Given a String "qaqiaoo". A duplicate is defined in that, whenever a character is 
+* repeated second time, then it is a duplicates. e.g. the second char 'q'in the 
+* string is a duplicate. give a code to output the duplicates of the string. e.g.
+* "qao", the result could be any permutation. 
+*)
+let getdups (str: string): string = 
+    str
+    |> Seq.fold (fun (has_seen:Set<char>, out:Set<char>) c ->
+            if has_seen.Contains c then
+                (has_seen, out.Add c)
+            else
+                (has_seen.Add c, out)
+        ) (Set.empty, Set.empty)
+    |> snd
+    |> String.Concat

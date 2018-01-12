@@ -291,6 +291,7 @@ let remove_at (n: int) (data: 'a list): 'a list =
     aux 0 data 
 
 
+<<<<<<< Updated upstream
 
 
 // binary trees
@@ -303,3 +304,17 @@ let char_tree = Node ('a', Empty, Node('b', Empty, Empty ))
 
 let int_tree = Node (9, Node(4, Empty, Node(5, Empty, Empty)), Node(11, Empty, Empty))
 
+=======
+// Insert an element at a given position into a list. (easy)
+// Start counting list elements with 0. If the position is larger or equal to the
+// length of the list, insert the element at the end. (The behavior is unspecified
+// if the position is negative.)
+// # insert_at "alfa" 1 ["a";"b";"c";"d"];;
+// - : string list = ["a"; "alfa"; "b"; "c"; "d"]
+// # insert_at "alfa" 3 ["a";"b";"c";"d"];;
+// - : string list = ["a"; "b"; "c"; "alfa"; "d"]
+// # insert_at "alfa" 4 ["a";"b";"c";"d"];;
+// - : string list = ["a"; "b"; "c"; "d"; "alfa"]
+
+
+>>>>>>> Stashed changes
