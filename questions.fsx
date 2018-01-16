@@ -1,4 +1,12 @@
 open System
+
+// Jose's interview question: implement a fold function
+let rec myFold(f: 'S -> 'T -> 'S) (initial: 'S) (data: 'T list): 'S = 
+    match data with
+    | head::tail -> myFold f (f initial head) tail  
+    | [] -> initial
+
+
 // Jose's interview question
 // implemt a fold function 
 
