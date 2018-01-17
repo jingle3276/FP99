@@ -1,5 +1,22 @@
 open System
 
+
+// Programming interview exposed Chapter 6, Arrays practice 
+// 	 * 
+// 	 * Given a array of String, find first the first non-repeated 
+// 	 * char and return it. e.g. given "ababec", return e. 
+// 	 * use O(n) efficiency. 
+let nonRepeatingChar (str:string) =
+    //Note: key point is use two passes. first one to build the Map<char, int>; second pass to find the first <char, 1> 
+    let lookup = Seq.fold (fun (s:Map<char, int>) (x:char) ->
+                            match s.ContainsKey x with
+                            | true ->
+                                s.Add (x, s.[x] + 1)
+                            | false ->
+                                s.Add (x, 1)        
+                        ) Map.empty str
+    Seq.tryFind (fun x-> lookup.[x] = 1) str
+
 // Jose's interview question: implement a fold function
 let rec myFold(f: 'S -> 'T -> 'S) (initial: 'S) (data: 'T list): 'S = 
     match data with
