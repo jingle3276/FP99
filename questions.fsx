@@ -1,4 +1,12 @@
 open System
+open System.Collections.Generic
+
+
+let rec myMap (f: 'T -> 'U) (data: 'T list): 'U list =
+    match data with
+    | head :: tail ->  (f head) :: (myMap f tail)
+    | [] -> []
+
 
 
 // Programming interview exposed Chapter 6, Arrays practice 
@@ -23,9 +31,25 @@ let rec myFold(f: 'S -> 'T -> 'S) (initial: 'S) (data: 'T list): 'S =
     | head::tail -> myFold f (f initial head) tail  
     | [] -> initial
 
+/// given a string, verify that it contains balanced parentheses.
+let rec balancedParen(str: char list) (openState: bool) =
+    match str with
+    | head::tail ->
+        if not openState then
+            if head = '(' then
+                balancedParen tail true
+            else
+                balancedParen tail false   
+        else
+            if head = ')' then
+                true
+            else
+                balancedParen tail true
+    | [] -> false
 
-// Jose's interview question
-// implemt a fold function 
+
+
+
 
 
 // Hugh Richardson's interview at Jet. I shadowed it 
