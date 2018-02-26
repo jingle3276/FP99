@@ -1,13 +1,68 @@
 open System
-open System.Collections.Generic
+//open System.Collections.Generic
+
+
+
+/// 2-25-2018 
+/// Jet Interview question James Wang
+/// input: a list of tuples(flight tickets) contains (source,destination)
+/// output: a list of tuples in the sequence of visiting a valid solution
+/// Given a list of tickets, find a valid solution that: 
+/// 1) used all the tickets 
+/// 2) the first ticket start from JFK
+/// assume there is always a valid solution in the given list; assume no duplicate tickets
+/// example: [(JFK, SFO), (JFK, AIL), (SFO, AIL), (AIL, SFO), (AIL, JFK)]
+/// case 1: [(JFK, SFO), (SFO, AIL), (AIL, SFO)] //dead-end. 
+/// case 2: [(JFK, AIL), (AIL, SFO), (SFO, AIL), (AIL, JFK), (JFK, SFO)] //finish
+
+/// idea: needs backtrack: recursion can backtrack. 
+/// it is indeed a DFS
+
+let findRoutes(tickets: (string*string) list)=
+    //return: (string*string) list 
+    // a Map that key = src, and value = Set of dests
+    let ticketsSet =
+        tickets
+        |> List.fold (fun (s:Map<string, string Set>) (src, dest) ->
+                            match s.ContainsKey src with 
+                            | false ->
+                                s.Add (src, [dest]|> Set)
+                            | true ->
+                                let destSet = s.[src]
+                                s.Add (src, destSet.Add dest)
+                        ) Map.empty
+    
+    /// understand fold: DFS https://fsharpforfunandprofit.com/posts/recursive-types-and-folds-2b/
+    let rec aux (ticketSet: Map<string, string Set>) (path:((string*string) list)) (src:string) =
+        //base case: no more tickets, return path
+        match ticketSet.Count with
+        | 0 -> path
+        | _ -> //has more tickets recursive case  
+            match ticketSet.ContainsKey src with
+            | true ->
+                let dests = ticketSet.[src]
+                dests
+                |> Seq.fold 
+                    
+                    (fun dest ->
+                                let dests = ticketSet.[src]
+                                let newTiketSet = ticketSet.add (src, dests.Remove dest)
+                                aux newTiketSet (src, dest)::path dest
+                           )
+            | false -> //didn't not find
+                return 
+
+    aux ticketsSet List.empty "JFK"       
+
+
+
+
 
 
 let rec myMap (f: 'T -> 'U) (data: 'T list): 'U list =
     match data with
     | head :: tail ->  (f head) :: (myMap f tail)
     | [] -> []
-
-
 
 // Programming interview exposed Chapter 6, Arrays practice 
 // 	 * 
