@@ -2,7 +2,6 @@ open System
 //open System.Collections.Generic
 
 
-
 /// 2-25-2018 
 /// Jet Interview question James Wang
 /// input: a list of tuples(flight tickets) contains (source,destination)
@@ -18,8 +17,10 @@ open System
 /// idea: needs backtrack: recursion can backtrack. 
 /// it is indeed a DFS
 
+
+/// DIDN't solve. try find an easier graph DFS problem and solve it later. 
 let findRoutes(tickets: (string*string) list)=
-    //return: (string*string) list 
+    // return: (string*string) list 
     // a Map that key = src, and value = Set of dests
     let ticketsSet =
         tickets
@@ -32,30 +33,31 @@ let findRoutes(tickets: (string*string) list)=
                                 s.Add (src, destSet.Add dest)
                         ) Map.empty
     
-    /// understand fold: DFS https://fsharpforfunandprofit.com/posts/recursive-types-and-folds-2b/
-    let rec aux (ticketSet: Map<string, string Set>) (path:((string*string) list)) (src:string) =
-        //base case: no more tickets, return path
-        match ticketSet.Count with
-        | 0 -> path
-        | _ -> //has more tickets recursive case  
-            match ticketSet.ContainsKey src with
-            | true ->
-                let dests = ticketSet.[src]
-                dests
-                |> Seq.fold 
-                    
-                    (fun dest ->
-                                let dests = ticketSet.[src]
-                                let newTiketSet = ticketSet.add (src, dests.Remove dest)
-                                aux newTiketSet (src, dest)::path dest
-                           )
-            | false -> //didn't not find
-                return 
+    let removeTicket (tickets: Map<string, string Set>) (src, dest) =
+        let dests = tickets.[src]
+        match dests.Count with
+        | 1 -> tickets.Remove src
+        | _ -> tickets.Add (src, (dests.Remove dest))
 
+
+    /// understand fold: DFS https://fsharpforfunandprofit.com/posts/recursive-types-and-folds-2b/
+    let rec aux (tickets: Map<string, string Set>) (path: (string*string) list) (src: string) =
+        //base case: no more tickets, return path
+        match tickets.Count with
+        | 0 -> path
+        | _ -> // has more tickets to use
+            for dest in tickets.[src] do
+                match tickets.ContainsKey dest with
+                | false -> //didn't not find
+                    ("DEAD", "DEAD")::path
+                | true ->
+                    let tickets = removeTicket tickets (src, dest)
+                    aux tickets ((src,dest)::path) dest
+            
+    
     aux ticketsSet List.empty "JFK"       
 
-
-
+//findRoutes [("JFK", "SFO"); ("JFK", "AIL"); ("SFO", "AIL"); ("AIL", "SFO"); ("AIL", "JFK")] ;;
 
 
 
