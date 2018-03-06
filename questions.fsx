@@ -2,6 +2,52 @@ open System
 //open System.Collections.Generic
 
 
+let rec findMax(arr: int list) (cur: int): int =
+    match arr with
+    | head::tail -> 
+        if head <= cur then
+            findMax tail cur
+        else
+            findMax tail head
+    | [] -> cur
+
+
+let findMaxFold (arr: int list) =
+    arr |> List.reduce (fun f s -> if f <= s then s else f)
+
+
+
+/// partition based on the first item in array; the result arrays must 
+/// exclude the first item. return the index and the first and second parts
+/// the partition function must reduce the total items 
+/// by 1 ! (in order to use in the recursive function DaC)
+/// the Array.partion cannot do that (it splits array into two parts)
+let partition (arr: int array): (int*int[]*int[]) =
+    let p1, p2 = Array.partition (fun x -> x <= arr.[0]) arr
+    let index = p1.Length - 1
+    let p1 = Array.skip 1 p1
+    (index, p1, p2) // the index must be the original array's index !!
+
+let partitionInplace(arr: int []): (int*int[]*int[]) = 
+
+
+
+
+
+let rec findKth (arr: int array) (k: int) =
+    match arr with
+    | [||] -> None
+    | [|x|] -> Some x
+    | _ ->
+        let (index, front, back) = partition arr
+        printfn "first: %A, last: %A" front back
+        if k < index then
+            findKth front k
+        else
+            findKth back k
+
+
+
 /// 2-25-2018 
 /// Jet Interview question James Wang
 /// input: a list of tuples(flight tickets) contains (source,destination)
@@ -105,10 +151,6 @@ let rec balancedParen(str: char list) (openState: bool) =
     | [] -> false
 
 
-
-
-
-
 // Hugh Richardson's interview at Jet. I shadowed it 
 // given input: ["cat", "dog", "act"]
 // output the groups of anagrams: [["cat", "act"], ["dog"]
@@ -146,12 +188,25 @@ let groupByAnagram1(words: string list): string list list =
 
 // Jose's interview question 2018-1-5
 // find increasing contigious ranges in an int array.
-// intput : [1; 2; 3; 5; 7; 8; 10] 
-// output:  1-3, 5, 7-8, 10
+///input: [1; 2; 3; 3; 6; 7; 9; 10 ;10] ;;
+///ouput : string list = ["1-3"; "3"; "6-7"; "9-10"; "10"]
+let findCoutiguousRangeFold (numbers: int list): (int*int) list =
+    let f, l , result =
+        numbers |> List.tail
+        |> List.fold (fun (first:int, last:int, aggr:(int*int) list) (x:int) -> 
+                        if x = last + 1 then 
+                            (first, x, aggr)
+                        else
+                            (x, x, (first,last)::aggr)
+                        )
+                     (numbers |> List.head, numbers |> List.head,[])
+    
+    (f,l)::result |> List.rev
 
 /// idea: the point of termines the block is at: when the current item is not part of the (first,last) range
 /// use range: (int*int) list as storage passed along
-/// first, last are the previous range block
+/// first, last are the previous range block]
+
 let findContigiousRange(numbers: int list): string list =
     let rec find(numbers: int list)(first: int)(last: int)(range: (int*int) list) =
         match numbers with
